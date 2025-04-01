@@ -12,14 +12,31 @@ const App = () => {
   ])
   const [ newName, setNewName ] = useState('')
 
+  /*
+  const isNameIncluded = () => {
+    const inc = persons.find((person) => person.name === newName)
+
+    console.log('isNameIncluded', inc);
+
+    return !(inc === undefined)
+  }*/
+
+  //no utilizo includes xq obj son distintos aunque tengan mismas caracteristicas
+  const isNameIncluded = () => !(undefined === persons.find( (x) => x.name === newName ))
+
   const addName = (event) => {
     event.preventDefault()
-    
-    const nameObject = {
-      name: newName
+
+    if (isNameIncluded()) {
+      alert(`${newName} is already added to phonebook`)
+    } else {
+      const nameObject = {
+        name: newName
+      }
+
+      setPersons(persons.concat(nameObject))
     }
 
-    setPersons(persons.concat(nameObject))
     setNewName('')
   }
 
