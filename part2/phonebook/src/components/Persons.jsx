@@ -1,11 +1,11 @@
-const Persons = (props) => {
-    const newSearchLowString = props.newSearch.toLowerCase()
+const Persons = ( {newSearch, persons} ) => {
+    const newSearchLowString = newSearch.toLowerCase()
 
-    const personsToShow = props.persons.filter( (x) => x.name.toLowerCase().includes(newSearchLowString) )
+    const personsToShow = persons.filter( (x) => x.name.toLowerCase().includes(newSearchLowString) )
 
     return (
         <div>
-            {personsToShow.map( (person) => <p key={person.id}>{person.name} {person.number}</p> )}
+            {personsToShow.map( (x) => <p key={x.id}>{x.name} {x.number}</p> )}
         </div>
     )
 }
