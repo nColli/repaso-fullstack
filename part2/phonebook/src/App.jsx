@@ -1,16 +1,7 @@
 import { useState } from "react";
-
-const Persons = ({persons, newSearch}) => {
-  const newSearchLowString = newSearch.toLowerCase()
-
-  const personsToShow = persons.filter( (x) => x.name.toLowerCase().includes(newSearchLowString) )
-
-  return (
-    <div>
-      {personsToShow.map( (person) => <p key={person.id}>{person.name} {person.number}</p> )}
-    </div>
-  )
-}
+import Filter from "./components/Filter";
+import PersonForm from "./components/PersonForm";
+import Persons from "./components/Persons";
 
 const App = () => {
   const [ persons, setPersons ] = useState([
@@ -23,7 +14,6 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ newSearch, setNewSearch ] = useState('')
 
-  //no utilizo includes xq obj son distintos aunque tengan mismas caracteristicas
   const isNameIncluded = () => !(undefined === persons.find( (x) => x.name === newName ))
 
   const addPerson = (event) => {
@@ -54,22 +44,24 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with <input value={newSearch} onChange={handleSearchChange}/>
-      </div>
-      <h2>add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange}/>
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
+
+      <Filter 
+        newSearch={newSearch} 
+        handleSearchChange={handleSearchChange} 
+      />
+
+      <h3>add a new</h3>
+
+      <PersonForm 
+        addPerson={addPerson}
+        newName={newName}
+        handleNameChange={handleNameChange}
+        newNumber={newNumber}
+        handleNumberChange={handleNumberChange}
+      />
+
+      <h3>Numbers</h3>
+
       <Persons persons={persons} newSearch={newSearch}/>
     </div>
   )
