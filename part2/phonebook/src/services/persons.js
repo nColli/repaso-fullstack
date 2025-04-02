@@ -12,5 +12,21 @@ const create = newPerson => (
         .post(baseUrl, newPerson)
         .then(response => response.data)
 )
+/* Versión 1:
+const remove = id => {
+    const url = `${baseUrl}/${id}`
+    const request = axios.delete(url)
+    console.log(request)
 
-export default { getAll, create }
+    const data = request.then((req) => req.data)
+    
+    return data
+}*/
+//Versión 2 - optimizada
+const remove = id => (
+    axios
+        .delete(`${baseUrl}/${id}`)
+        .then((request) => request.data)
+)
+
+export default { getAll, create, remove }
