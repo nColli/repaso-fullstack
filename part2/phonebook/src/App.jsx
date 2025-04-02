@@ -21,13 +21,33 @@ const App = () => {
   }
   useEffect(hook, [])
 
-  const isNameIncluded = () => !(undefined === persons.find( (x) => x.name === newName ))
+  const getNewPerson = () => {
+    return persons.find( (p) => p.name === newName )
+  }
+
+  const updatePersons = (person) => {
+    const updatedPersonsList = persons.map( (p) => p.id !== person.id ? p : person )
+
+    setPersons(updatedPersonsList)
+  }
 
   const addPerson = (event) => {
     event.preventDefault()
 
-    if (isNameIncluded()) {
-      alert(`${newName} is already added to phonebook`)
+    console.log('get new person:',getNewPerson());
+
+    const repeatPerson = getNewPerson()
+
+    if (undefined !== repeatPerson) {
+      const message = `${repeatPerson.name} is already added to phonebook, replace the old number with a new one?`
+
+      if ( window.confirm( message ) ) {
+        const personNumberUpdated = { ...repeatPerson, number: newNumber}
+
+        personService
+          .update(personNumberUpdated)
+          .then( (p) => updatePersons(p) )
+      }
     } else {
       
       const nameObject = {
