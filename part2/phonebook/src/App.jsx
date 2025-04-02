@@ -21,9 +21,7 @@ const App = () => {
   }
   useEffect(hook, [])
 
-  const getNewPerson = () => {
-    return persons.find( (p) => p.name === newName )
-  }
+  const getPersonWithNewName = () => persons.find( (p) => p.name === newName )
 
   const updatePersons = (person) => {
     const updatedPersonsList = persons.map( (p) => p.id !== person.id ? p : person )
@@ -34,20 +32,20 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
 
-    console.log('get new person:',getNewPerson());
-
-    const repeatPerson = getNewPerson()
+    const repeatPerson = getPersonWithNewName()
 
     if (undefined !== repeatPerson) {
+
       const message = `${repeatPerson.name} is already added to phonebook, replace the old number with a new one?`
 
       if ( window.confirm( message ) ) {
-        const personNumberUpdated = { ...repeatPerson, number: newNumber}
+        const personUpdated = { ...repeatPerson, number: newNumber}
 
         personService
-          .update(personNumberUpdated)
+          .update(personUpdated)
           .then( (p) => updatePersons(p) )
       }
+
     } else {
       
       const nameObject = {
@@ -71,7 +69,7 @@ const App = () => {
   const handleSearchChange = (event) => setNewSearch(event.target.value)
 
   const handleDelete = (person) => {
-    if (window.confirm(`Detete ${person.name} ?`)) {
+    if (window.confirm(`Delete ${person.name} ?`)) {
       personService
         .remove(person.id)
         .then((personToDel) => setPersons( persons.filter( (p) => p.id !== personToDel.id) ) )
