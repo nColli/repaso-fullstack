@@ -5,10 +5,10 @@ import Notification from './components/Notification'
 import Footer from './components/Footer'
 
 const App = () => {
-  const [ notes, setNotes ] = useState([])
+  const [ notes, setNotes ] = useState(null)
   const [ newNote, setNewNote ] = useState('')
   const [ showAll, setShowAll ] = useState(true)
-  const [ errorMessage, setErrorMessage ] = useState('some error happened...')
+  const [ errorMessage, setErrorMessage ] = useState('test message...')
 
   useEffect( () => {
     noteService
@@ -18,6 +18,12 @@ const App = () => {
         setNotes(initialNotes)
       })
   } , [])
+
+  //no renderizo nada si notes todavia es null, cuando reciba notes de server, ahi renderizo las notes o array vacio
+  if (!notes) {
+    return null
+  }
+
 
   const addNote = (event) => {
     event.preventDefault()
