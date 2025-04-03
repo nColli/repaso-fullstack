@@ -55,6 +55,15 @@ const App = () => {
             }, 5000)
 
           } )
+          .catch(error => {
+            setMessageIsError(true)
+            setMessage(`Information of ${personUpdated.name} has already been removed from server`)
+
+            setTimeout(() => {
+              setMessage(null)
+              setMessageIsError(false)
+            }, 5000)
+          })
       }
 
     } else {
@@ -73,7 +82,7 @@ const App = () => {
           setTimeout(() => {
             setMessage(null)
           }, 5000)
-          
+
         } )
     }
 
@@ -99,7 +108,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
 
-      <Notification message={message} messageIsSucess={messageIsError} />
+      <Notification message={message} messageIsError={messageIsError} />
 
       <Filter 
         newSearch={newSearch} 

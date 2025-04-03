@@ -12,9 +12,7 @@ const Notification = ({ message, messageIsError }) => {
         marginBottom: 10
     }
 
-    if (messageIsError) {
-        notificationStyle[color] = 'red'
-    }
+    if (messageIsError) { notificationStyle.color = 'red' }
 
     return (
         <div style={notificationStyle}>
