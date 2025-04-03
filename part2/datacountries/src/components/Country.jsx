@@ -1,6 +1,5 @@
 const Country = ({country}) => {
-    console.log(country);
-
+    
     const name = country.name.common
     const capital = country.capital[0]
     const area = country.area

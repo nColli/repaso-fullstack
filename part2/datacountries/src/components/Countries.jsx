@@ -1,15 +1,12 @@
 import Country from './Country'
 
-const Countries = ({search, countries}) => {
-    //filtrar paises, si tengo mas de 10 mostrar cartel que sea mas especifico, si filtro es nulo, no muestro nada xq todavia no puso nada
+const Countries = ({search, countries, countryToShow, handleClickShowCountry}) => {
 
     if (search === '') {
         return null
     }
 
     const filteredCountries = countries.filter((c) => c.name.common.toLowerCase().includes(search))
-    
-    console.log(filteredCountries.length);
     
     if (filteredCountries.length > 10) {
         return (
@@ -25,10 +22,18 @@ const Countries = ({search, countries}) => {
         )
     }
 
+    if (countryToShow != null) {
+        const country = filteredCountries.find((c) => c.name.common === countryToShow)
+
+        return (
+            <Country country={country}  />
+        )
+    }
+
     return (
         <div>
             {filteredCountries.map((c) => (
-                <p>{c.name.common}</p>
+                <p key={c.name.common}>{c.name.common} <button value={c.name.common} onClick={handleClickShowCountry}>Show</button></p>
             ))}
         </div>
     )
