@@ -3,12 +3,15 @@ import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import personService from './services/persons'
+import Notification from "./components/Notification";
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newSearch, setNewSearch ] = useState('')
+  const [ message, setMessage ] = useState(null)
+  const [ messageIsError, setMessageIsError ] = useState(false)
 
   const hook = () => {
     //console.log('effect');
@@ -43,7 +46,15 @@ const App = () => {
 
         personService
           .update(personUpdated)
-          .then( (p) => updatePersons(p) )
+          .then( (p) => {
+            updatePersons(p)
+
+            setMessage(`Updated ${p.name}`)
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
+
+          } )
       }
 
     } else {
@@ -55,7 +66,15 @@ const App = () => {
       
       personService
         .create(nameObject)
-        .then( (p) => setPersons(persons.concat(p)) )
+        .then( (p) => {
+          setPersons(persons.concat(p)) 
+
+          setMessage(`Added ${p.name}`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+          
+        } )
     }
 
     setNewName('')
@@ -79,6 +98,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={message} messageIsSucess={messageIsError} />
 
       <Filter 
         newSearch={newSearch} 
