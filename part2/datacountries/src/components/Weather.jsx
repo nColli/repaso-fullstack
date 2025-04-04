@@ -14,7 +14,7 @@ const Weather = ( { capital, lat, lng } ) => {
         return null
     }
 
-    const tempCelsius = weatherData.main.temp - 273.15
+    const tempCelsius = (weatherData.main.temp - 273.15).toFixed(2)
     const iconCode = weatherData.weather[0].icon 
     const iconURL = `https://openweathermap.org/img/wn/${iconCode}@2x.png`
     const weatherDescription = weatherData.weather[0].description
