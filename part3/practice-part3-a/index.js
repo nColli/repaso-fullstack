@@ -92,3 +92,10 @@ const PORT = 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
+
+//Handle request for non-existent routes
+const unknownEndpoint = (request, response) => {
+  response.status(404).send( { error: 'Unknown endpoint' } )
+}
+
+app.use(unknownEndpoint)
