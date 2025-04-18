@@ -19,7 +19,7 @@ const requestLogger = (request, response, next) => {
 
 app.use(requestLogger)
 
-
+//for delete request
 let notes = [
   {
     id: 1,
@@ -38,35 +38,26 @@ let notes = [
   }
 ]
 
-const generateId = () => {
-  const maxId = notes.length > 0
-    ? Math.max(...notes.map(n => n.id)) //lo transforma en 1, 2, 3, 4
-    : 0
-
-  return maxId + 1
-}
-
-
 app.get('/', (request, response) => {
-  response.send('<h1>Hello world</h1>')
+    response.send('<h1>Hello world</h1>')
 })
 
 app.get('/api/notes', (request, response) => {
-  Note.find({}).then(n => {
-    response.json(n)
-    mongoose.connection.close()
-  })
+    Note
+        .find({})
+        .then(note => {
+            response.json(note)
+        })
 })
 
 app.get('/api/notes/:id', (request, response) => {
-  const id = Number(request.params.id)
-  const note = notes.find(note => note.id === id)
+    const id = request.params.id
 
-  if (note) {
-    response.json(note)
-  } else {
-    response.status(404).end()
-  }
+    Note
+        .findById(id)
+        .then((note) => {
+            response.json(note)
+        })
 })
 
 app.delete('/api/notes/:id', (request, response) => {
@@ -77,6 +68,7 @@ app.delete('/api/notes/:id', (request, response) => {
 })
 
 app.post('/api/notes', (request, response) => {
+    /*
   const body = request.body
 
   if (!body.content) {
@@ -93,7 +85,19 @@ app.post('/api/notes', (request, response) => {
 
   notes = notes.concat(note)
 
-  response.json(note)
+  response.json(note)*/
+    const body = request.body
+    
+    if (body.content === undefined) {
+        return response.status(400).json( { error: "content missing" } )
+    }
+
+    const note = new Note({
+        content: body.content,
+        important: body.important || false
+    })
+
+    note.save().then(savedNote => { response.json(savedNote) })
 })
 
 const PORT = process.env.PORT
