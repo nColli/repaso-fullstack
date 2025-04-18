@@ -51,9 +51,7 @@ app.get('/api/notes', (request, response) => {
 })
 
 app.get('/api/notes/:id', (request, response, next) => {
-    const id = request.params.id
-
-    Note.findById(id)
+    Note.findById(request.params.id)
         .then((note) => {
             console.log('note from database',note);
             if (note) {
@@ -66,10 +64,11 @@ app.get('/api/notes/:id', (request, response, next) => {
 })
 
 app.delete('/api/notes/:id', (request, response) => {
-  const id = Number(request.params.id)
-  notes = notes.filter(note => note.id !== id)
-
-  response.status(204).end()
+    Note.findByIdAndDelete(request.params.id)
+      .then(result => {
+        response.status(204).end()
+      })
+      .catch(error => next(error))
 })
 
 app.post('/api/notes', (request, response) => {
@@ -86,6 +85,23 @@ app.post('/api/notes', (request, response) => {
 
     note.save().then(savedNote => { response.json(savedNote) })
 })
+
+app.put('/api/notes/:id', (request, response, next) => {
+    const body = request.body
+    const id = request.params.id
+
+    const note = {
+      content: body.content,
+      important: body.important
+    }
+
+    Note.findByIdAndUpdate(id, note, { new: true })
+      .then(updatedNote => {
+        response.json(updatedNote)
+      })
+      .catch(error => next(error))
+})
+
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
