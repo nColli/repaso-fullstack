@@ -4,10 +4,6 @@ const cors = require('cors')
 const app = express()
 const Note = require('./models/note')
 
-app.use(express.json())
-app.use(cors())
-app.use(express.static('dist'))
-
 //Custom middleware
 const requestLogger = (request, response, next) => {
   console.log('Method:', request.method);
@@ -17,7 +13,11 @@ const requestLogger = (request, response, next) => {
   next()
 }
 
+app.use(express.static('dist'))
+app.use(express.json())
 app.use(requestLogger)
+app.use(cors())
+
 
 //for delete request
 let notes = [
@@ -50,14 +50,19 @@ app.get('/api/notes', (request, response) => {
         })
 })
 
-app.get('/api/notes/:id', (request, response) => {
+app.get('/api/notes/:id', (request, response, next) => {
     const id = request.params.id
 
-    Note
-        .findById(id)
+    Note.findById(id)
         .then((note) => {
-            response.json(note)
+            console.log('note from database',note);
+            if (note) {
+              response.json(note)
+            } else {
+              response.status(404).end()
+            }
         })
+        .catch(error => next(error))
 })
 
 app.delete('/api/notes/:id', (request, response) => {
@@ -93,3 +98,15 @@ const unknownEndpoint = (request, response) => {
 }
 
 app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+  console.log(error.message);
+  
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  }
+
+  next(error)
+}
+
+app.use(errorHandler)
