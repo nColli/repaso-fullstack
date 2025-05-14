@@ -19,6 +19,18 @@ app.use(requestLogger)
 app.use(cors())
 
 
+app.post('/api/upload', (req, res) => {
+  const file = req.file
+  console.log('archivo recibido', file);
+  
+  if (!file) {
+    return res.status(400).send('No file uploaded')
+  }
+
+  // Process the file here (e.g., save it to a database or storage)
+  res.status(200).send('File uploaded successfully')
+});
+
 app.get('/', (request, response) => {
     response.send('<h1>Hello world</h1>')
 })

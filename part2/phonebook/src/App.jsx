@@ -12,6 +12,7 @@ const App = () => {
   const [ newSearch, setNewSearch ] = useState('')
   const [ message, setMessage ] = useState(null)
   const [ messageIsError, setMessageIsError ] = useState(false)
+  const [ file, setFile ] = useState(null)
 
   const hook = () => {
     //console.log('effect');
@@ -104,11 +105,36 @@ const App = () => {
     }
   } 
 
+  const handleChange = (event) => {
+    const newFile = event.target.files[0]
+    
+    setFile(newFile)
+    console.log('archivo almacenado', newFile);
+  }
+
+  const handleUpload = () => {
+    const formData = new FormData()
+    formData.append('file', file)
+    
+    axios.post('/api/upload', formData)
+      .then(response => {
+        console.log('archivo enviado con exito');
+        alert('archivo enviado')
+      })
+      .catch((error) => {
+        console.log('error al enviar el archivo', error);
+      })
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
 
       <Notification message={message} messageIsError={messageIsError} />
+
+      <input type="file" onChange={handleChange} />
+      <br />
+      <button onClick={handleUpload}>Subir</button>
 
       <Filter 
         newSearch={newSearch} 
