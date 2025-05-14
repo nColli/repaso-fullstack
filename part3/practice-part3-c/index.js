@@ -23,6 +23,12 @@ app.get('/', (request, response) => {
     response.send('<h1>Hello world</h1>')
 })
 
+app.post('/api/hooks', (request, response) => {
+  console.log('hook body', request.body);
+  
+  response.status(200).end()
+})
+
 app.get('/api/notes', (request, response) => {
     Note
         .find({})
@@ -44,7 +50,7 @@ app.get('/api/notes/:id', (request, response, next) => {
         .catch(error => next(error))
 })
 
-app.delete('/api/notes/:id', (request, response) => {
+app.delete('/api/notes/:id', (request, response, next) => {
     Note.findByIdAndDelete(request.params.id)
       .then(result => {
         response.status(204).end()
